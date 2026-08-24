@@ -8,16 +8,16 @@ import { fetchQuizzes } from "@/lib/quiz-api";
 export const Route = createFileRoute("/quizzes/")({
   head: () => ({
     meta: [
-      { title: "All Quizzes — QuizPulse" },
+      { title: "All Quizzes — QuizPulse Arenas" },
       {
         name: "description",
         content:
-          "Browse every QuizPulse quiz: frontend, systems, science, culture and world trivia, filtered by difficulty.",
+          "Browse every QuizPulse arena: frontend, systems, science, culture and world trivia quizzes by difficulty.",
       },
-      { property: "og:title", content: "All Quizzes — QuizPulse" },
+      { property: "og:title", content: "All Quizzes — QuizPulse Arenas" },
       {
         property: "og:description",
-        content: "Browse every QuizPulse quiz and pick your difficulty.",
+        content: "Browse every QuizPulse arena and pick your difficulty.",
       },
     ],
   }),
@@ -33,39 +33,43 @@ function QuizzesPage() {
 
   return (
     <ArenaShell>
-      <div className="mx-auto w-full max-w-6xl">
-        <header className="max-w-2xl">
-          <h1 className="text-4xl font-medium tracking-tight sm:text-5xl">
-            Every <span className="font-display italic">quiz</span>.
-          </h1>
-          <p className="mt-3 text-base leading-relaxed text-muted-foreground">
-            Pick a subject and start the clock. Each correct answer is worth 100 XP.
+      <div className="mx-auto w-full max-w-5xl space-y-6">
+        <header className="space-y-2">
+          <h1 className="font-display text-3xl font-extrabold sm:text-5xl">All Arenas</h1>
+          <p className="text-sm text-muted-foreground">
+            Pick a battleground. Every correct answer is worth 100 XP.
           </p>
         </header>
 
-        <div className="mt-8 flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2">
           {difficulties.map((d) => (
             <button
               key={d}
               onClick={() => setFilter(d)}
-              className={`press rounded-lg border px-3.5 py-1.5 text-xs font-medium tracking-tight transition-colors ${
+              className={`press rounded-full px-4 py-2 text-[10px] font-bold tracking-widest uppercase ring-1 ${
                 filter === d
-                  ? "border-primary bg-primary text-primary-foreground"
-                  : "border-border bg-surface text-muted-foreground hover:bg-secondary"
+                  ? "bg-primary text-primary-foreground ring-primary"
+                  : "bg-surface text-muted-foreground ring-border"
               }`}
             >
-              {d.charAt(0) + d.slice(1).toLowerCase()}
+              {d}
             </button>
           ))}
         </div>
 
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {isLoading
-            ? [0, 1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="h-48 animate-pulse rounded-xl border border-border bg-surface-2" />
-              ))
-            : list.map((quiz, i) => <QuizCard key={quiz.id} quiz={quiz} index={i} />)}
-        </div>
+        {isLoading ? (
+          <div className="grid gap-4 sm:grid-cols-2">
+            {[0, 1, 2, 3].map((i) => (
+              <div key={i} className="h-44 animate-pulse rounded-[28px] bg-surface" />
+            ))}
+          </div>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2">
+            {list.map((quiz, i) => (
+              <QuizCard key={quiz.id} quiz={quiz} index={i} />
+            ))}
+          </div>
+        )}
       </div>
     </ArenaShell>
   );
