@@ -8,16 +8,16 @@ import { fetchQuizzes } from "@/lib/quiz-api";
 export const Route = createFileRoute("/quizzes/")({
   head: () => ({
     meta: [
-      { title: "All Quizzes — QuizPulse Arenas" },
+      { title: "All Quizzes — QuizPulse" },
       {
         name: "description",
         content:
-          "Browse every QuizPulse arena: frontend, systems, science, culture and world trivia quizzes by difficulty.",
+          "Browse every QuizPulse quiz: frontend, systems, science, culture and world trivia, filtered by difficulty.",
       },
-      { property: "og:title", content: "All Quizzes — QuizPulse Arenas" },
+      { property: "og:title", content: "All Quizzes — QuizPulse" },
       {
         property: "og:description",
-        content: "Browse every QuizPulse arena and pick your difficulty.",
+        content: "Browse every quiz and pick your difficulty.",
       },
     ],
   }),
@@ -33,11 +33,11 @@ function QuizzesPage() {
 
   return (
     <ArenaShell>
-      <div className="mx-auto w-full max-w-5xl space-y-6">
-        <header className="space-y-2">
-          <h1 className="font-display text-3xl font-extrabold sm:text-5xl">All Arenas</h1>
-          <p className="text-sm text-muted-foreground">
-            Pick a battleground. Every correct answer is worth 100 XP.
+      <div className="mx-auto w-full max-w-6xl space-y-8">
+        <header className="max-w-xl space-y-3">
+          <h1 className="reveal text-3xl font-semibold sm:text-5xl">All quizzes</h1>
+          <p className="reveal text-[17px] text-muted-foreground" style={{ animationDelay: "80ms" }}>
+            Every correct answer is worth 100 XP. Choose your difficulty.
           </p>
         </header>
 
@@ -46,30 +46,24 @@ function QuizzesPage() {
             <button
               key={d}
               onClick={() => setFilter(d)}
-              className={`press rounded-full px-4 py-2 text-[10px] font-bold tracking-widest uppercase ring-1 ${
+              className={`press rounded-full px-4 py-2 text-sm ${
                 filter === d
-                  ? "bg-primary text-primary-foreground ring-primary"
-                  : "bg-surface text-muted-foreground ring-border"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary/70 text-muted-foreground hover:text-foreground"
               }`}
             >
-              {d}
+              {d === "ALL" ? "All" : d.charAt(0) + d.slice(1).toLowerCase()}
             </button>
           ))}
         </div>
 
-        {isLoading ? (
-          <div className="grid gap-4 sm:grid-cols-2">
-            {[0, 1, 2, 3].map((i) => (
-              <div key={i} className="h-44 animate-pulse rounded-[28px] bg-surface" />
-            ))}
-          </div>
-        ) : (
-          <div className="grid gap-4 sm:grid-cols-2">
-            {list.map((quiz, i) => (
-              <QuizCard key={quiz.id} quiz={quiz} index={i} />
-            ))}
-          </div>
-        )}
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {isLoading
+            ? [0, 1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="h-44 animate-pulse rounded-[22px] bg-surface" />
+              ))
+            : list.map((quiz, i) => <QuizCard key={quiz.id} quiz={quiz} index={i} />)}
+        </div>
       </div>
     </ArenaShell>
   );
