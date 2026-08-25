@@ -14,44 +14,45 @@ export function LeaderboardList({
 }) {
   if (rows.length === 0) {
     return (
-      <div className="rounded-[24px] bg-surface p-6 text-center text-sm text-muted-foreground ring-1 ring-border">
+      <div className="card-soft rounded-[22px] p-8 text-center text-sm text-muted-foreground">
         No ranked players yet. Be the first on the board.
       </div>
     );
   }
 
+  const top = rows[0]?.xp || 1;
+
   return (
-    <div className="divide-y divide-border rounded-[24px] bg-surface ring-1 ring-border">
+    <div className="card-soft overflow-hidden rounded-[22px]">
       {rows.map((row, i) => (
         <div
           key={row.id}
-          className={`rise-in flex items-center gap-4 p-4 ${
-            row.id === highlightId ? "bg-primary/10" : i % 2 === 1 ? "bg-foreground/[0.02]" : ""
-          }`}
-          style={{ animationDelay: `${i * 45}ms` }}
+          className={`reveal relative flex items-center gap-4 px-4 py-3.5 transition-colors duration-300 hover:bg-secondary/50 ${
+            i > 0 ? "border-t border-border/60" : ""
+          } ${row.id === highlightId ? "bg-accent/8" : ""}`}
+          style={{ animationDelay: `${Math.min(i, 12) * 40}ms` }}
         >
-          <span className="w-5 font-mono text-xs font-bold text-muted-foreground">
-            {String(i + 1).padStart(2, "0")}
-          </span>
+          <span className="w-6 text-sm tabular-nums text-muted-foreground">{i + 1}</span>
           <img
             src={AVATARS[i % AVATARS.length]}
             alt={`${row.username} avatar`}
             width={512}
             height={512}
             loading="lazy"
-            className="size-10 shrink-0 rounded-full object-cover ring-1 ring-border"
+            className="size-9 shrink-0 rounded-full object-cover"
           />
           <div className="min-w-0 flex-1">
-            <div className="truncate text-sm font-semibold">{row.username}</div>
-            <div className="text-[10px] text-muted-foreground">
-              {row.xp.toLocaleString()} XP
+            <div className="truncate text-sm font-medium">{row.username}</div>
+            <div className="mt-1.5 h-[3px] w-full max-w-40 overflow-hidden rounded-full bg-secondary">
+              <div
+                className="h-full rounded-full bg-accent transition-[width] duration-700 ease-out"
+                style={{ width: `${Math.max(6, (row.xp / top) * 100)}%` }}
+              />
             </div>
           </div>
-          {i === 0 && (
-            <div className="grid size-6 place-items-center rounded-full border border-primary/25 bg-primary/10 text-[10px] font-bold text-primary">
-              W
-            </div>
-          )}
+          <span className="text-sm tabular-nums text-muted-foreground">
+            {row.xp.toLocaleString()}
+          </span>
         </div>
       ))}
     </div>
