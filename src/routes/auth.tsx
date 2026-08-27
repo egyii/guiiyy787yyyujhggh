@@ -54,7 +54,7 @@ function AuthPage() {
       if (signUpError) setError(signUpError.message);
       else
         setMessage(
-          "Check your inbox — we sent a verification link. Confirm it, then sign in to bank XP.",
+          "Check your inbox — we sent a verification link. Confirm it, then sign in to save XP.",
         );
     } else {
       const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
@@ -77,27 +77,30 @@ function AuthPage() {
     navigate({ to: "/stats" });
   }
 
+  const inputClass =
+    "w-full rounded-2xl bg-secondary/60 px-4 py-3.5 text-[15px] outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-ring/40";
+
   return (
     <ArenaShell>
       <div className="mx-auto w-full max-w-md space-y-6">
-        <header className="space-y-2 text-center">
-          <h1 className="font-display text-3xl font-extrabold">
-            {mode === "signup" ? "Join the Arena" : "Welcome back"}
+        <header className="reveal space-y-2 text-center">
+          <h1 className="text-3xl font-semibold tracking-tight">
+            {mode === "signup" ? "Create your account" : "Welcome back"}
           </h1>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-[15px] text-muted-foreground">
             {mode === "signup"
-              ? "Verify your email to bank XP and climb the ranks."
-              : "Sign in to keep your streak alive."}
+              ? "Verify your email to save XP and climb the leaderboard."
+              : "Sign in to keep your streak going."}
           </p>
         </header>
 
-        <div className="flex rounded-2xl bg-surface p-1 ring-1 ring-border">
+        <div className="flex rounded-full bg-secondary/60 p-1">
           {(["signup", "signin"] as const).map((m) => (
             <button
               key={m}
               onClick={() => setMode(m)}
-              className={`flex-1 rounded-xl py-2 text-xs font-bold tracking-widest uppercase ${
-                mode === m ? "bg-primary text-primary-foreground" : "text-muted-foreground"
+              className={`press flex-1 rounded-full py-2 text-sm font-medium ${
+                mode === m ? "bg-background text-foreground shadow-sm" : "text-muted-foreground"
               }`}
             >
               {m === "signup" ? "Sign up" : "Sign in"}
@@ -105,16 +108,14 @@ function AuthPage() {
           ))}
         </div>
 
-        <form
-          onSubmit={submit}
-          className="space-y-3 rounded-[24px] bg-surface p-5 ring-1 ring-border"
-        >
+        <form onSubmit={submit} className="card-soft space-y-3 rounded-[24px] p-6">
           {mode === "signup" && (
             <input
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              placeholder="Player name"
-              className="w-full rounded-xl bg-secondary/60 px-4 py-3 text-sm ring-1 ring-border outline-none focus:ring-primary"
+              placeholder="Display name"
+              autoComplete="nickname"
+              className={inputClass}
             />
           )}
           <input
@@ -123,7 +124,8 @@ function AuthPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="you@email.com"
-            className="w-full rounded-xl bg-secondary/60 px-4 py-3 text-sm ring-1 ring-border outline-none focus:ring-primary"
+            autoComplete="email"
+            className={inputClass}
           />
           <input
             type="password"
@@ -131,29 +133,42 @@ function AuthPage() {
             minLength={6}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Password"
-            className="w-full rounded-xl bg-secondary/60 px-4 py-3 text-sm ring-1 ring-border outline-none focus:ring-primary"
+            placeholder="Password (6+ characters)"
+            autoComplete={mode === "signup" ? "new-password" : "current-password"}
+            className={inputClass}
           />
 
-          {error && <p className="text-xs font-medium text-destructive">{error}</p>}
-          {message && <p className="text-xs font-medium text-accent">{message}</p>}
+          {error && <p className="text-sm text-destructive">{error}</p>}
+          {message && <p className="text-sm text-accent">{message}</p>}
 
           <button
             type="submit"
             disabled={busy}
-            className="press w-full rounded-2xl bg-primary py-3 text-sm font-bold text-primary-foreground disabled:opacity-50"
+            className="press w-full rounded-full bg-primary py-3.5 text-sm font-medium text-primary-foreground disabled:opacity-50"
           >
-            {busy ? "Working..." : mode === "signup" ? "Create account" : "Sign in"}
+            {busy ? "Working…" : mode === "signup" ? "Create account" : "Sign in"}
           </button>
+
+          <div className="flex items-center gap-3 py-1 text-xs text-muted-foreground">
+            <span className="h-px flex-1 bg-border" />
+            or
+            <span className="h-px flex-1 bg-border" />
+          </div>
 
           <button
             type="button"
             onClick={google}
-            className="press w-full rounded-2xl bg-secondary py-3 text-sm font-bold text-secondary-foreground ring-1 ring-border"
+            className="press w-full rounded-full bg-secondary py-3.5 text-sm font-medium"
           >
             Continue with Google
           </button>
         </form>
+
+        <p className="text-center text-xs text-muted-foreground">
+          {mode === "signup"
+            ? "Already have an account? Switch to Sign in above."
+            : "New here? Switch to Sign up above."}
+        </p>
       </div>
     </ArenaShell>
   );
