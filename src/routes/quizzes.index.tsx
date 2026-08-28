@@ -114,23 +114,8 @@ function QuizzesPage() {
             ))}
           </div>
 
-          {categories.length > 1 && (
-            <div className="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 sm:mx-0 sm:flex-wrap sm:px-0">
-              {categories.map((c) => (
-                <button
-                  key={c}
-                  onClick={() => setCategory(c)}
-                  className={`press shrink-0 rounded-full px-3.5 py-1.5 text-[13px] ${
-                    category === c
-                      ? "bg-secondary text-foreground"
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                >
-                  {c === "ALL" ? "All topics" : c}
-                </button>
-              ))}
-            </div>
-          )}
+
+
 
           <div className="flex items-center gap-3 text-[13px] text-muted-foreground">
             <span>
