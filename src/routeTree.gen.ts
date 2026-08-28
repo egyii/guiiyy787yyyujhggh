@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as LeaderboardRouteImport } from './routes/leaderboard'
 import { Route as AuthenticatedStatsRouteImport } from './routes/_authenticated/stats'
+import { Route as CoursesIndexRouteImport } from './routes/courses.index'
 import { Route as QuizzesIndexRouteImport } from './routes/quizzes.index'
 import { Route as QuizzesSlugRouteImport } from './routes/quizzes.$slug'
 
@@ -41,6 +42,11 @@ const AuthenticatedStatsRoute = AuthenticatedStatsRouteImport.update({
   path: '/stats',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const CoursesIndexRoute = CoursesIndexRouteImport.update({
+  id: '/courses/',
+  path: '/courses/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const QuizzesIndexRoute = QuizzesIndexRouteImport.update({
   id: '/quizzes/',
   path: '/quizzes/',
@@ -58,6 +64,7 @@ export interface FileRoutesByFullPath {
   '/leaderboard': typeof LeaderboardRoute
   '/stats': typeof AuthenticatedStatsRoute
   '/quizzes/$slug': typeof QuizzesSlugRoute
+  '/courses/': typeof CoursesIndexRoute
   '/quizzes/': typeof QuizzesIndexRoute
 }
 export interface FileRoutesByTo {
@@ -66,6 +73,7 @@ export interface FileRoutesByTo {
   '/leaderboard': typeof LeaderboardRoute
   '/stats': typeof AuthenticatedStatsRoute
   '/quizzes/$slug': typeof QuizzesSlugRoute
+  '/courses': typeof CoursesIndexRoute
   '/quizzes': typeof QuizzesIndexRoute
 }
 export interface FileRoutesById {
@@ -76,14 +84,28 @@ export interface FileRoutesById {
   '/leaderboard': typeof LeaderboardRoute
   '/_authenticated/stats': typeof AuthenticatedStatsRoute
   '/quizzes/$slug': typeof QuizzesSlugRoute
+  '/courses/': typeof CoursesIndexRoute
   '/quizzes/': typeof QuizzesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/auth' | '/leaderboard' | '/stats' | '/quizzes/$slug' | '/quizzes/'
+    | '/'
+    | '/auth'
+    | '/leaderboard'
+    | '/stats'
+    | '/quizzes/$slug'
+    | '/courses/'
+    | '/quizzes/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/leaderboard' | '/stats' | '/quizzes/$slug' | '/quizzes'
+  to:
+    | '/'
+    | '/auth'
+    | '/leaderboard'
+    | '/stats'
+    | '/quizzes/$slug'
+    | '/courses'
+    | '/quizzes'
   id:
     | '__root__'
     | '/'
@@ -92,6 +114,7 @@ export interface FileRouteTypes {
     | '/leaderboard'
     | '/_authenticated/stats'
     | '/quizzes/$slug'
+    | '/courses/'
     | '/quizzes/'
   fileRoutesById: FileRoutesById
 }
@@ -101,6 +124,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   LeaderboardRoute: typeof LeaderboardRoute
   QuizzesSlugRoute: typeof QuizzesSlugRoute
+  CoursesIndexRoute: typeof CoursesIndexRoute
   QuizzesIndexRoute: typeof QuizzesIndexRoute
 }
 
@@ -141,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStatsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/courses/': {
+      id: '/courses/'
+      path: '/courses'
+      fullPath: '/courses/'
+      preLoaderRoute: typeof CoursesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/quizzes/': {
       id: '/quizzes/'
       path: '/quizzes'
@@ -175,6 +206,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   LeaderboardRoute: LeaderboardRoute,
   QuizzesSlugRoute: QuizzesSlugRoute,
+  CoursesIndexRoute: CoursesIndexRoute,
   QuizzesIndexRoute: QuizzesIndexRoute,
 }
 export const routeTree = rootRouteImport
