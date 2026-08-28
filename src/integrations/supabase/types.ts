@@ -52,6 +52,117 @@ export type Database = {
           },
         ]
       }
+      chapters: {
+        Row: {
+          created_at: string
+          id: string
+          parent_id: string | null
+          position: number
+          slug: string
+          subject_id: string
+          summary: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          parent_id?: string | null
+          position?: number
+          slug: string
+          subject_id: string
+          summary?: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          parent_id?: string | null
+          position?: number
+          slug?: string
+          subject_id?: string
+          summary?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chapters_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "chapters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "chapters_subject_id_fkey"
+            columns: ["subject_id"]
+            isOneToOne: false
+            referencedRelation: "subjects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lessons: {
+        Row: {
+          assignment: string | null
+          chapter_id: string
+          created_at: string
+          description: string
+          duration_minutes: number | null
+          id: string
+          notes: string | null
+          pdf_url: string | null
+          position: number
+          quiz_id: string | null
+          slug: string
+          title: string
+          video_url: string | null
+        }
+        Insert: {
+          assignment?: string | null
+          chapter_id: string
+          created_at?: string
+          description?: string
+          duration_minutes?: number | null
+          id?: string
+          notes?: string | null
+          pdf_url?: string | null
+          position?: number
+          quiz_id?: string | null
+          slug: string
+          title: string
+          video_url?: string | null
+        }
+        Update: {
+          assignment?: string | null
+          chapter_id?: string
+          created_at?: string
+          description?: string
+          duration_minutes?: number | null
+          id?: string
+          notes?: string | null
+          pdf_url?: string | null
+          position?: number
+          quiz_id?: string | null
+          slug?: string
+          title?: string
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lessons_chapter_id_fkey"
+            columns: ["chapter_id"]
+            isOneToOne: false
+            referencedRelation: "chapters"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lessons_quiz_id_fkey"
+            columns: ["quiz_id"]
+            isOneToOne: false
+            referencedRelation: "quizzes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string
@@ -139,6 +250,36 @@ export type Database = {
           difficulty?: string
           icon?: string
           id?: string
+          slug?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      subjects: {
+        Row: {
+          created_at: string
+          description: string
+          icon: string
+          id: string
+          position: number
+          slug: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          position?: number
+          slug: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          position?: number
           slug?: string
           title?: string
         }
