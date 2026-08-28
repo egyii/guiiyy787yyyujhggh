@@ -17,9 +17,11 @@ import { useSession } from "@/hooks/use-session";
 import { useTheme } from "@/hooks/use-theme";
 
 const NAV = [
+  { to: "/courses", label: "Courses" },
   { to: "/quizzes", label: "Quizzes" },
   { to: "/leaderboard", label: "Leaderboard" },
 ] as const;
+
 
 function ThemeToggle() {
   const { theme, toggle } = useTheme();
