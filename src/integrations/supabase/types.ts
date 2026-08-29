@@ -100,6 +100,92 @@ export type Database = {
           },
         ]
       }
+      courses: {
+        Row: {
+          created_at: string
+          description: string
+          icon: string
+          id: string
+          position: number
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          position?: number
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          position?: number
+          slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      lesson_parts: {
+        Row: {
+          assignment: string | null
+          created_at: string
+          description: string
+          duration_minutes: number | null
+          id: string
+          lesson_id: string
+          notes: string | null
+          pdf_url: string | null
+          position: number
+          title: string
+          updated_at: string
+          video_url: string | null
+        }
+        Insert: {
+          assignment?: string | null
+          created_at?: string
+          description?: string
+          duration_minutes?: number | null
+          id?: string
+          lesson_id: string
+          notes?: string | null
+          pdf_url?: string | null
+          position?: number
+          title: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Update: {
+          assignment?: string | null
+          created_at?: string
+          description?: string
+          duration_minutes?: number | null
+          id?: string
+          lesson_id?: string
+          notes?: string | null
+          pdf_url?: string | null
+          position?: number
+          title?: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lesson_parts_lesson_id_fkey"
+            columns: ["lesson_id"]
+            isOneToOne: false
+            referencedRelation: "lessons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lessons: {
         Row: {
           assignment: string | null
@@ -257,6 +343,7 @@ export type Database = {
       }
       subjects: {
         Row: {
+          course_id: string | null
           created_at: string
           description: string
           icon: string
@@ -266,6 +353,7 @@ export type Database = {
           title: string
         }
         Insert: {
+          course_id?: string | null
           created_at?: string
           description?: string
           icon?: string
@@ -275,6 +363,7 @@ export type Database = {
           title: string
         }
         Update: {
+          course_id?: string | null
           created_at?: string
           description?: string
           icon?: string
@@ -283,7 +372,15 @@ export type Database = {
           slug?: string
           title?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "subjects_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
