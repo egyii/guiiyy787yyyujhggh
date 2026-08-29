@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { ArenaShell } from "@/components/arena-shell";
+import { ArenaShell, Breadcrumbs } from "@/components/arena-shell";
 import { fetchMyAttempts, fetchMyProfile } from "@/lib/quiz-api";
 import { useSession } from "@/hooks/use-session";
 
