@@ -73,17 +73,15 @@ export function Breadcrumbs({
 }
 
 function BottomTabs() {
-  const { user } = useSession();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   const tabs = [
     { to: "/", label: "Home", icon: Home, exact: true },
+    { to: "/courses", label: "Courses", icon: BookOpen },
     { to: "/quizzes", label: "Quizzes", icon: LayoutGrid },
     { to: "/leaderboard", label: "Ranks", icon: Trophy },
-    user
-      ? { to: "/stats", label: "Stats", icon: BarChart3 }
-      : { to: "/auth", label: "Sign in", icon: UserRound },
   ] as const;
+
 
   return (
     <nav
