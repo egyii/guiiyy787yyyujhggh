@@ -1,7 +1,7 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 import {
-  BarChart3,
+  BookOpen,
   ChevronRight,
   Home,
   LayoutGrid,
@@ -9,7 +9,6 @@ import {
   Moon,
   Sun,
   Trophy,
-  UserRound,
   X,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
