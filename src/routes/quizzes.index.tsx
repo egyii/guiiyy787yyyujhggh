@@ -34,30 +34,23 @@ function label(value: string) {
 function QuizzesPage() {
   const { data, isLoading } = useQuery({ queryKey: ["quizzes"], queryFn: fetchQuizzes });
   const [difficulty, setDifficulty] = useState<string>("ALL");
-  const [category, setCategory] = useState<string>("ALL");
   const [query, setQuery] = useState("");
 
   const quizzes = data ?? [];
-  const categories = useMemo(
-    () => ["ALL", ...Array.from(new Set(quizzes.map((q) => q.category))).sort()],
-    [quizzes],
-  );
 
   const list = useMemo(() => {
     const q = query.trim().toLowerCase();
     return quizzes.filter((quiz) => {
       if (difficulty !== "ALL" && quiz.difficulty !== difficulty) return false;
-      if (category !== "ALL" && quiz.category !== category) return false;
       if (!q) return true;
       return `${quiz.title} ${quiz.description} ${quiz.category}`.toLowerCase().includes(q);
     });
-  }, [quizzes, difficulty, category, query]);
+  }, [quizzes, difficulty, query]);
 
-  const filtered = difficulty !== "ALL" || category !== "ALL" || query.trim() !== "";
+  const filtered = difficulty !== "ALL" || query.trim() !== "";
 
   function reset() {
     setDifficulty("ALL");
-    setCategory("ALL");
     setQuery("");
   }
 
