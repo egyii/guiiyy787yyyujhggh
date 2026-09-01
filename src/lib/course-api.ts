@@ -219,3 +219,13 @@ export async function fetchLessonBySlug(slug: string): Promise<LessonDetail | nu
     quiz: row.quizzes ?? null,
   };
 }
+
+/** All subjects across every course (used by the courses index). */
+export async function fetchSubjects(): Promise<Subject[]> {
+  const { data, error } = await supabase
+    .from("subjects")
+    .select(SUBJECT_COLS)
+    .order("position", { ascending: true });
+  if (error) throw error;
+  return (data ?? []) as Subject[];
+}
