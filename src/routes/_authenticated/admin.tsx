@@ -80,7 +80,7 @@ function RowEditor({
     mutationFn: async () => {
       const payload: Row = {};
       for (const f of entity.fields) payload[f.name] = fromFormValue(f, values[f.name] ?? "");
-      if (row?.id) await updateRow(entityKey, String(row.id), payload);
+      if (row?.['id']) await updateRow(entityKey, String(row['id']), payload);
       else await createRow(entityKey, payload);
     },
     onSuccess: () => {
@@ -124,8 +124,8 @@ function RowEditor({
                   <select value={value} onChange={(e) => set(e.target.value)} className={inputClass}>
                     <option value="">—</option>
                     {(refs[f.refTable!] ?? []).map((r) => (
-                      <option key={String(r.id)} value={String(r.id)}>
-                        {String(r[entityFor(f.refTable!).labelField] ?? r.id).slice(0, 60)}
+                      <option key={String(r['id'])} value={String(r['id'])}>
+                        {String(r[entityFor(f.refTable!).labelField] ?? r['id']).slice(0, 60)}
                       </option>
                     ))}
                   </select>
@@ -259,13 +259,13 @@ function AdminPage() {
             <p className="p-6 text-center text-sm text-muted-foreground">Nothing here yet.</p>
           ) : (
             (rows.data ?? []).map((row) => (
-              <div key={String(row.id)} className="flex items-center gap-3 px-3 py-3">
+              <div key={String(row['id'])} className="flex items-center gap-3 px-3 py-3">
                 <span className="min-w-0 flex-1">
                   <span className="block truncate text-sm font-medium">
-                    {String(row[entity.labelField] ?? row.id)}
+                    {String(row[entity.labelField] ?? row['id'])}
                   </span>
-                  {row.slug ? (
-                    <span className="block truncate text-[12px] text-muted-foreground">/{String(row.slug)}</span>
+                  {row['slug'] ? (
+                    <span className="block truncate text-[12px] text-muted-foreground">/{String(row['slug'])}</span>
                   ) : null}
                 </span>
                 <button
@@ -277,7 +277,7 @@ function AdminPage() {
                 </button>
                 <button
                   onClick={() => {
-                    if (confirm("Delete this item?")) remove.mutate(String(row.id));
+                    if (confirm("Delete this item?")) remove.mutate(String(row['id']));
                   }}
                   aria-label="Delete"
                   className="press grid size-9 place-items-center rounded-full bg-secondary/60 text-destructive hover:bg-destructive/15"

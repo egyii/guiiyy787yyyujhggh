@@ -42,6 +42,7 @@ function PlayPage() {
   const [done, setDone] = useState(false);
   const [seconds, setSeconds] = useState(QUESTION_SECONDS);
   const [saved, setSaved] = useState<number | null>(null);
+  const [answers, setAnswers] = useState<number[]>([]);
 
   const current = list[index];
 
@@ -67,10 +68,15 @@ function PlayPage() {
       setPicked((prev) => {
         if (prev !== null) return prev;
         if (i === current?.correct_index) setScore((s) => s + 1);
+        setAnswers((a) => {
+          const copy = [...a];
+          copy[index] = i;
+          return copy;
+        });
         return i;
       });
     },
-    [current],
+    [current, index],
   );
 
   const next = useCallback(() => {
@@ -100,6 +106,7 @@ function PlayPage() {
     setScore(0);
     setDone(false);
     setSaved(null);
+    setAnswers([]);
     setSeconds(QUESTION_SECONDS);
   }
 
@@ -134,7 +141,7 @@ function PlayPage() {
     const pct = list.length ? Math.round((score / list.length) * 100) : 0;
     return (
       <ArenaShell>
-        <div className="mx-auto w-full max-w-md space-y-6">
+        <div className="mx-auto w-full max-w-2xl space-y-6">
           <Breadcrumbs
             items={[
               { label: "Quizzes", to: "/quizzes" },
@@ -175,6 +182,71 @@ function PlayPage() {
               Back to all quizzes
             </Link>
           </div>
+
+          <section className="space-y-3">
+            <h2 className="px-1 text-sm font-medium text-muted-foreground">Review answers</h2>
+            {list.map((q, qi) => {
+              const mine = answers[qi] ?? -1;
+              const right = mine === q.correct_index;
+              return (
+                <article
+                  key={q.id}
+                  className="reveal card-soft space-y-3 rounded-[24px] p-5"
+                  style={{ animationDelay: `${Math.min(qi, 8) * 45}ms` }}
+                >
+                  <div className="flex items-start gap-3">
+                    <span
+                      className={`mt-0.5 grid size-6 shrink-0 place-items-center rounded-full ${
+                        right ? "bg-success/15 text-success" : "bg-destructive/12 text-destructive"
+                      }`}
+                    >
+                      {right ? <Check className="size-3.5" /> : <X className="size-3.5" />}
+                    </span>
+                    <h3 className="min-w-0 flex-1 text-[15px] leading-snug font-medium text-pretty">
+                      {qi + 1}. {q.prompt}
+                    </h3>
+                  </div>
+
+                  <ul className="space-y-1.5">
+                    {q.options.map((opt, oi) => {
+                      const isCorrect = oi === q.correct_index;
+                      const isMine = oi === mine;
+                      return (
+                        <li
+                          key={opt}
+                          className={`flex items-center gap-2 rounded-2xl px-3.5 py-2.5 text-sm ${
+                            isCorrect
+                              ? "bg-success/12"
+                              : isMine
+                                ? "bg-destructive/10"
+                                : "bg-secondary/40 opacity-70"
+                          }`}
+                        >
+                          <span className="min-w-0 flex-1">{opt}</span>
+                          {isCorrect && (
+                            <span className="shrink-0 text-[11px] font-medium text-success">
+                              correct
+                            </span>
+                          )}
+                          {isMine && !isCorrect && (
+                            <span className="shrink-0 text-[11px] font-medium text-destructive">
+                              your pick
+                            </span>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+
+                  {q.explanation ? (
+                    <p className="rounded-2xl bg-secondary/50 px-3.5 py-3 text-[13px] leading-relaxed text-muted-foreground">
+                      {q.explanation}
+                    </p>
+                  ) : null}
+                </article>
+              );
+            })}
+          </section>
         </div>
       </ArenaShell>
     );
@@ -203,6 +275,19 @@ function PlayPage() {
               className="h-full rounded-full bg-foreground/80 transition-[width] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
               style={{ width: `${(answered / Math.max(list.length, 1)) * 100}%` }}
             />
+          </div>
+          <div className="flex flex-wrap gap-1.5 pt-1">
+            {list.map((q, qi) => {
+              const state =
+                qi < index || (qi === index && picked !== null)
+                  ? (answers[qi] ?? -1) === q.correct_index
+                    ? "bg-success"
+                    : "bg-destructive/70"
+                  : qi === index
+                    ? "bg-foreground/70"
+                    : "bg-secondary";
+              return <span key={q.id} className={`size-1.5 rounded-full ${state}`} />;
+            })}
           </div>
           <div className="flex items-center justify-between text-[13px] text-muted-foreground">
             <span>
@@ -256,6 +341,12 @@ function PlayPage() {
               );
             })}
           </div>
+
+          {picked !== null && current?.explanation ? (
+            <p className="reveal mt-4 rounded-2xl bg-secondary/50 px-4 py-3 text-[13px] leading-relaxed text-muted-foreground">
+              {current.explanation}
+            </p>
+          ) : null}
         </div>
 
         <div className="flex items-center justify-between gap-3">
