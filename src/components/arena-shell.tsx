@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
+import { useIsAdmin } from "@/hooks/use-admin";
 import { useTheme } from "@/hooks/use-theme";
 
 const NAV = [
@@ -118,6 +119,7 @@ function BottomTabs() {
 
 export function ArenaShell({ children }: { children: ReactNode }) {
   const { user } = useSession();
+  const { isAdmin } = useIsAdmin();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
@@ -171,6 +173,18 @@ export function ArenaShell({ children }: { children: ReactNode }) {
                 Stats
               </Link>
             )}
+            {isAdmin && (
+              <Link
+                to="/admin"
+                className={`press rounded-full px-3 py-1.5 ${
+                  pathname.startsWith("/admin")
+                    ? "bg-secondary text-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                Admin
+              </Link>
+            )}
           </nav>
 
           <div className="flex items-center gap-2">
@@ -219,6 +233,14 @@ export function ArenaShell({ children }: { children: ReactNode }) {
                   className="press rounded-2xl px-3 py-3 text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
                 >
                   Stats
+                </Link>
+              )}
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  className="press rounded-2xl px-3 py-3 text-muted-foreground hover:bg-secondary/60 hover:text-foreground"
+                >
+                  Admin
                 </Link>
               )}
               {user ? (
