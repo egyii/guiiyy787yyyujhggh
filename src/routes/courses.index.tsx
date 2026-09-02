@@ -52,32 +52,71 @@ function CoursesPage() {
           </p>
         </header>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          {isLoading
-            ? [0, 1].map((i) => <div key={i} className="h-40 animate-pulse rounded-[24px] bg-surface" />)
-            : subjects.map((subject, i) => (
-                <Link
-                  key={subject.id}
-                  to="/courses/$subject"
-                  params={{ subject: subject.slug }}
-                  className="press card-soft sheen reveal group flex flex-col gap-3 rounded-[24px] p-6"
-                  style={{ animationDelay: `${i * 70}ms` }}
-                >
-                  <span className="grid size-10 place-items-center rounded-2xl bg-secondary/70 text-foreground/80">
-                    <BookOpen className="size-[18px]" />
+        {isLoading ? (
+          <div className="grid gap-4 sm:grid-cols-2">
+            {[0, 1].map((i) => (
+              <div key={i} className="h-40 animate-pulse rounded-[24px] bg-surface" />
+            ))}
+          </div>
+        ) : (
+          <div className="space-y-12">
+            {grouped.map(({ course, items }) => (
+              <section key={course.id} className="space-y-4">
+                <div className="flex items-end justify-between gap-4">
+                  <div>
+                    <h2 className="text-xl font-semibold sm:text-2xl">{course.title}</h2>
+                    {course.description && (
+                      <p className="mt-1 max-w-xl text-sm text-muted-foreground">
+                        {course.description}
+                      </p>
+                    )}
+                  </div>
+                  <span className="shrink-0 rounded-full bg-secondary/70 px-3 py-1 text-[12px] text-muted-foreground">
+                    {items.length} subject{items.length === 1 ? "" : "s"}
                   </span>
-                  <h2 className="text-lg font-medium">{subject.title}</h2>
-                  <p className="text-sm leading-relaxed text-muted-foreground">
-                    {subject.description}
-                  </p>
-                  <span className="mt-auto inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors group-hover:text-foreground">
-                    Open syllabus
-                    <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
-                  </span>
-                </Link>
-              ))}
-        </div>
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {items.map((subject, i) => (
+                    <SubjectCard key={subject.id} subject={subject} index={i} />
+                  ))}
+                </div>
+              </section>
+            ))}
+
+            {ungrouped.length > 0 && (
+              <section className="space-y-4">
+                <h2 className="text-xl font-semibold sm:text-2xl">Other subjects</h2>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {ungrouped.map((subject, i) => (
+                    <SubjectCard key={subject.id} subject={subject} index={i} />
+                  ))}
+                </div>
+              </section>
+            )}
+          </div>
+        )}
       </div>
     </ArenaShell>
+  );
+}
+
+function SubjectCard({ subject, index }: { subject: Subject; index: number }) {
+  return (
+    <Link
+      to="/courses/$subject"
+      params={{ subject: subject.slug }}
+      className="press card-soft sheen reveal group flex flex-col gap-3 rounded-[24px] p-6"
+      style={{ animationDelay: `${index * 70}ms` }}
+    >
+      <span className="grid size-10 place-items-center rounded-2xl bg-secondary/70 text-foreground/80">
+        <BookOpen className="size-[18px]" />
+      </span>
+      <h3 className="text-lg font-medium">{subject.title}</h3>
+      <p className="text-sm leading-relaxed text-muted-foreground">{subject.description}</p>
+      <span className="mt-auto inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors group-hover:text-foreground">
+        Open syllabus
+        <ArrowRight className="size-4 transition-transform duration-300 group-hover:translate-x-0.5" />
+      </span>
+    </Link>
   );
 }
