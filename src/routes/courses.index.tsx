@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowRight, BookOpen } from "lucide-react";
 import { ArenaShell, Breadcrumbs } from "@/components/arena-shell";
-import { fetchSubjects } from "@/lib/course-api";
+import { fetchCourses, fetchSubjects, type Subject } from "@/lib/course-api";
 
 export const Route = createFileRoute("/courses/")({
   head: () => ({
