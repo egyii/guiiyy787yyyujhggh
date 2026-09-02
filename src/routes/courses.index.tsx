@@ -27,7 +27,14 @@ export const Route = createFileRoute("/courses/")({
 
 function CoursesPage() {
   const { data, isLoading } = useQuery({ queryKey: ["subjects"], queryFn: fetchSubjects });
+  const { data: courseData } = useQuery({ queryKey: ["courses"], queryFn: fetchCourses });
   const subjects = data ?? [];
+  const courses = courseData ?? [];
+  const grouped = courses
+    .map((course) => ({ course, items: subjects.filter((s) => s.course_id === course.id) }))
+    .filter((g) => g.items.length > 0);
+  const ungrouped = subjects.filter((s) => !courses.some((c) => c.id === s.course_id));
+
 
   return (
     <ArenaShell>
