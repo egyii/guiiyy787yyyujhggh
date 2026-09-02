@@ -16,6 +16,7 @@ export type Question = {
   options: string[];
   correct_index: number;
   position: number;
+  explanation: string | null;
 };
 
 export type LeaderRow = {
@@ -46,7 +47,7 @@ export async function fetchQuizBySlug(slug: string) {
 export async function fetchQuestions(quizId: string): Promise<Question[]> {
   const { data, error } = await supabase
     .from("questions")
-    .select("id, prompt, options, correct_index, position")
+    .select("id, prompt, options, correct_index, position, explanation")
     .eq("quiz_id", quizId)
     .order("position", { ascending: true });
   if (error) throw error;
@@ -56,6 +57,7 @@ export async function fetchQuestions(quizId: string): Promise<Question[]> {
     options: (q.options as string[]) ?? [],
     correct_index: q.correct_index,
     position: q.position,
+    explanation: q.explanation ?? null,
   }));
 }
 
