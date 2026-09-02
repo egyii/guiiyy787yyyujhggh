@@ -86,7 +86,8 @@ function BottomTabs() {
   return (
     <nav
       aria-label="Primary"
-      className="fixed inset-x-0 bottom-0 z-50 border-t border-border/60 bg-background/85 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl sm:hidden"
+      style={{ paddingBottom: "max(env(safe-area-inset-bottom), 6px)" }}
+      className="fixed inset-x-0 bottom-0 z-50 border-t border-border/60 bg-background/90 backdrop-blur-xl sm:hidden"
     >
       <ul className="grid grid-cols-4">
         {tabs.map(({ to, label, icon: Icon, ...rest }) => {
