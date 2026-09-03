@@ -5,7 +5,7 @@ const db = supabase as unknown as {
     select: (cols: string) => {
       order: (col: string, opts: { ascending: boolean }) => Promise<{ data: Row[] | null; error: { message: string } | null }>;
     };
-    insert: (values: Row) => Promise<{ error: { message: string } | null }>;
+    insert: (values: Row | Row[]) => Promise<{ error: { message: string } | null }>;
     update: (values: Row) => { eq: (col: string, val: string) => Promise<{ error: { message: string } | null }> };
     delete: () => { eq: (col: string, val: string) => Promise<{ error: { message: string } | null }> };
   };
@@ -188,5 +188,11 @@ export async function updateRow(key: EntityKey, id: string, values: Row) {
 
 export async function deleteRow(key: EntityKey, id: string) {
   const { error } = await db.from(entityFor(key).table).delete().eq("id", id);
+  if (error) throw new Error(error.message);
+}
+
+export async function insertRows(key: EntityKey, rows: Row[]) {
+  if (rows.length === 0) return;
+  const { error } = await db.from(entityFor(key).table).insert(rows);
   if (error) throw new Error(error.message);
 }
