@@ -5,7 +5,7 @@ const db = supabase as unknown as {
     select: (cols: string) => {
       order: (col: string, opts: { ascending: boolean }) => Promise<{ data: Row[] | null; error: { message: string } | null }>;
     };
-    insert: (values: Row) => Promise<{ error: { message: string } | null }>;
+    insert: (values: Row | Row[]) => Promise<{ error: { message: string } | null }>;
     update: (values: Row) => { eq: (col: string, val: string) => Promise<{ error: { message: string } | null }> };
     delete: () => { eq: (col: string, val: string) => Promise<{ error: { message: string } | null }> };
   };
