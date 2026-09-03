@@ -22,11 +22,11 @@ function NodeRow({
   actions,
 }: {
   title: string;
-  subtitle?: string;
+  subtitle?: string | undefined;
   depth: number;
-  open?: boolean;
-  hasChildrenToggle?: boolean;
-  onToggle?: () => void;
+  open?: boolean | undefined;
+  hasChildrenToggle?: boolean | undefined;
+  onToggle?: (() => void) | undefined;
   actions: React.ReactNode;
 }) {
   return (
