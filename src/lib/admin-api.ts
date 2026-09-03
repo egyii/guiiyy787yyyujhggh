@@ -190,3 +190,9 @@ export async function deleteRow(key: EntityKey, id: string) {
   const { error } = await db.from(entityFor(key).table).delete().eq("id", id);
   if (error) throw new Error(error.message);
 }
+
+export async function insertRows(key: EntityKey, rows: Row[]) {
+  if (rows.length === 0) return;
+  const { error } = await db.from(entityFor(key).table).insert(rows);
+  if (error) throw new Error(error.message);
+}
