@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useSession } from "@/hooks/use-session";
-import { useIsAdmin } from "@/hooks/use-admin";
+import { useRoles } from "@/hooks/use-admin";
 import { useTheme } from "@/hooks/use-theme";
 
 const NAV = [
@@ -120,7 +120,7 @@ function BottomTabs() {
 
 export function ArenaShell({ children }: { children: ReactNode }) {
   const { user } = useSession();
-  const { isAdmin } = useIsAdmin();
+  const { canEditContent: isAdmin } = useRoles();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
