@@ -3,7 +3,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { ChevronRight, Pencil, Plus, Trash2 } from "lucide-react";
 import { ArenaShell, Breadcrumbs } from "@/components/arena-shell";
-import { useIsAdmin } from "@/hooks/use-admin";
+import { useRoles } from "@/hooks/use-admin";
+import { AdminUsers } from "@/components/admin-users";
 import { AdminTree } from "@/components/admin-tree";
 import { AdminImport } from "@/components/admin-import";
 import { RowEditor } from "@/components/admin-row-editor";
@@ -30,18 +31,19 @@ export const Route = createFileRoute("/_authenticated/admin")({
   component: AdminPage,
 });
 
-type Tab = "library" | "quizzes" | "import";
+type Tab = "library" | "quizzes" | "import" | "users";
 
-const TABS: { key: Tab; label: string }[] = [
+const TABS: { key: Tab; label: string; adminOnly?: boolean }[] = [
   { key: "library", label: "Course library" },
   { key: "quizzes", label: "Quizzes & questions" },
   { key: "import", label: "Import questions" },
+  { key: "users", label: "Users", adminOnly: true },
 ];
 
 type Editing = { key: EntityKey; row: Row | null; defaults?: Row };
 
 function AdminPage() {
-  const { isAdmin, loading } = useIsAdmin();
+  const { isAdmin, canEditContent, loading, user } = useRoles();
   const [tab, setTab] = useState<Tab>("library");
   const [editing, setEditing] = useState<Editing | null>(null);
   const [openQuiz, setOpenQuiz] = useState<Record<string, boolean>>({});
@@ -49,7 +51,7 @@ function AdminPage() {
 
   const all = useQuery({
     queryKey: ["admin-all"],
-    enabled: isAdmin,
+    enabled: canEditContent,
     queryFn: async () => {
       const out = {} as Record<EntityKey, Row[]>;
       await Promise.all(
@@ -80,13 +82,14 @@ function AdminPage() {
     );
   }
 
-  if (!isAdmin) {
+  if (!canEditContent) {
     return (
       <ArenaShell>
         <div className="card-soft mx-auto max-w-md space-y-3 rounded-[24px] p-8 text-center">
           <h1 className="text-xl font-semibold">Admins only</h1>
           <p className="text-sm text-muted-foreground">
-            Your account doesn’t have admin access. Ask an existing admin to grant you the admin role.
+            Your account doesn’t have admin access. Ask an existing admin to grant you the admin or
+            semi-admin role.
           </p>
         </div>
       </ArenaShell>
@@ -104,12 +107,13 @@ function AdminPage() {
           <h1 className="reveal text-3xl font-semibold sm:text-4xl">Admin</h1>
           <p className="reveal text-[15px] text-muted-foreground" style={{ animationDelay: "70ms" }}>
             Build everything in one place — expand a course to add subjects, chapters, classes and parts
-            without switching tabs.
+            without switching tabs.{" "}
+            {isAdmin ? "Open Users to inspect any account or grant semi-admin access." : "You have semi-admin access: course and quiz content only."}
           </p>
         </header>
 
         <div className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1">
-          {TABS.map((t) => (
+          {TABS.filter((t) => !t.adminOnly || isAdmin).map((t) => (
             <button
               key={t.key}
               onClick={() => setTab(t.key)}
@@ -224,9 +228,11 @@ function AdminPage() {
               )}
             </div>
           </div>
-        ) : (
+        ) : tab === "import" ? (
           <AdminImport quizzes={data.quizzes} />
-        )}
+        ) : isAdmin ? (
+          <AdminUsers currentUserId={user?.id} />
+        ) : null}
 
         {all.error && <p className="text-sm text-destructive">{(all.error as Error).message}</p>}
       </div>
