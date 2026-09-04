@@ -54,11 +54,7 @@ function Landing() {
   return (
     <ArenaShell>
       <div className="mx-auto w-full max-w-6xl space-y-28">
-        <section className="relative">
-          <div
-            className="float-slow pointer-events-none absolute -top-40 left-1/2 -z-10 size-[560px] -translate-x-1/2 rounded-full bg-accent/12 blur-[130px]"
-            aria-hidden
-          />
+        <section>
           <div className="mx-auto max-w-2xl space-y-6 text-center">
             <span className="reveal inline-flex items-center gap-2 rounded-full bg-secondary/70 px-3 py-1 text-xs text-muted-foreground">
               <Sparkles className="size-3.5" />
